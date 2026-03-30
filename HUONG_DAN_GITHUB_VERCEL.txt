@@ -1,0 +1,14 @@
+HUONG DAN NGAN
+
+1. Tao repository moi tren GitHub.
+2. Upload cac file trong goi nay len.
+3. Vao Vercel.
+4. Chon Add New Project.
+5. Chon repository vua upload.
+6. Bam Deploy.
+7. Lay link .vercel.app de su dung.
+
+Cap nhat sau nay:
+- Sua file index.html
+- Upload lai len GitHub
+- Vercel tu cap nhat

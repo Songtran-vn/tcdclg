@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ôn tập tài chính - Dạy Con Làm Giàu</title>
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --panel: #ffffff;
+      --panel-2: #f1f5f9;
+      --text: #0f172a;
+      --muted: #475569;
+      --accent: #16a34a;
+      --accent-2: #0284c7;
+      --danger: #dc2626;
+      --warning: #d97706;
+      --border: #cbd5e1;
+      --shadow: 0 10px 30px rgba(15,23,42,.08);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: linear-gradient(180deg, #f8fafc 0%, #eef6ff 100%);
+      color: var(--text);
+      min-height: 100vh;
+    }
+    .wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .card {
+      background: rgba(255,255,255,.96);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      box-shadow: var(--shadow);
+      padding: 20px;
+      backdrop-filter: blur(8px);
+    }
+    .title {
+      font-size: 30px;
+      font-weight: 700;
+      margin: 0 0 8px;
+    }
+    .sub {
+      color: var(--muted);
+      line-height: 1.5;
+      margin-bottom: 18px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 18px;
+    }
+    .section-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin: 0 0 12px;
+    }
+    .controls {
+      display: grid;
+      gap: 12px;
+    }
+    label {
+      display: block;
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    select, input[type="number"] {
+      width: 100%;
+      background: #ffffff;
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px;
+      font-size: 15px;
+    }
+    .check-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      margin-top: 4px;
+    }
+    .check {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #ffffff;
+      border: 1px solid var(--border);
+      padding: 10px 12px;
+      border-radius: 12px;
+      color: var(--text);
+    }
+    button {
+      border: none;
+      border-radius: 14px;
+      padding: 12px 16px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: .2s ease;
+    }
+    button:hover { transform: translateY(-1px); }
+    .btn-primary {
+      background: linear-gradient(90deg, var(--accent), #16a34a);
+      color: white;
+    }
+    .btn-secondary {
+      background: #ffffff;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .btn-danger {
+      background: linear-gradient(90deg, var(--danger), #dc2626);
+      color: white;
+    }
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 12px;
+    }
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+    .stat {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 14px;
+    }
+    .stat b {
+      display: block;
+      font-size: 24px;
+      margin-top: 4px;
+    }
+    #quizView, #resultView { display: none; }
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 8px 12px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+    .question-box {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 18px;
+      margin-bottom: 14px;
+    }
+    .question-meta {
+      color: var(--accent-2);
+      font-size: 14px;
+      margin-bottom: 10px;
+      font-weight: 700;
+    }
+    .question-text {
+      font-size: 22px;
+      line-height: 1.45;
+      margin-bottom: 18px;
+    }
+    .options {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      align-items: stretch;
+    }
+    .option {
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 16px;
+      cursor: pointer;
+      background: #ffffff;
+      transition: .18s ease;
+      min-height: 92px;
+      display: flex;
+      align-items: center;
+      line-height: 1.45;
+    }
+    .option b {
+      display: inline-block;
+      min-width: 28px;
+      margin-right: 4px;
+    }
+    .option:hover {
+      border-color: #94a3b8;
+      background: #f8fafc;
+      transform: translateY(-1px);
+    }
+    .option.selected {
+      border-color: var(--accent-2);
+      outline: 2px solid rgba(56,189,248,.15);
+    }
+    .option.correct {
+      border-color: var(--accent);
+      background: rgba(34,197,94,.12);
+    }
+    .option.wrong {
+      border-color: var(--danger);
+      background: rgba(239,68,68,.12);
+    }
+    .nav {
+      display: flex;
+      gap: 10px;
+      margin-top: 16px;
+      flex-wrap: wrap;
+    }
+    .progress {
+      width: 100%;
+      height: 12px;
+      background: #e2e8f0;
+      border-radius: 999px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      margin: 10px 0 14px;
+    }
+    .bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      transition: width .3s ease;
+    }
+    .feedback {
+      margin-top: 12px;
+      min-height: 24px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+    .result-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+    .result-card {
+      background: #0b1220;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 16px;
+    }
+    .result-card .big {
+      font-size: 28px;
+      font-weight: 700;
+      margin-top: 6px;
+    }
+    .review-item {
+      background: #0b1220;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 12px;
+    }
+    .muted { color: var(--muted); }
+    .small { font-size: 14px; }
+    .footer-note {
+      color: var(--muted);
+      font-size: 13px;
+      margin-top: 16px;
+      line-height: 1.5;
+    }
+    
+    @media (max-width: 760px) {
+      .options {
+        grid-template-columns: 1fr;
+      }
+      .option {
+        min-height: 76px;
+      }
+    }
+@media (max-width: 900px) {
+      .grid { grid-template-columns: 1fr; }
+      .result-grid { grid-template-columns: repeat(2, 1fr); }
+      .title { font-size: 24px; }
+      .question-text { font-size: 18px; }
+    }
+    @media (max-width: 560px) {
+      .result-grid, .stats { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div id="startView" class="card">
+      <h1 class="title">Ôn tập tài chính từ bộ sách Dạy Con Làm Giàu</h1>
+      <div class="sub">
+        App HTML chạy offline. Mở file là dùng được ngay, không cần cài đặt, không cần internet.
+        Có chọn theo tập, chọn số câu, xáo đề, hiện đáp án đúng, chấm điểm và lưu tiến độ trên máy.
+      </div>
+
+      <div class="grid">
+        <div class="card" style="padding:18px;">
+          <h2 class="section-title">Thiết lập bài học</h2>
+          <div class="controls">
+            <div>
+              <label for="tapSelect">Chọn phạm vi ôn tập</label>
+              <select id="tapSelect"></select>
+            </div>
+            <div>
+              <label for="countInput">Số câu muốn làm</label>
+              <input id="countInput" type="number" min="5" max="100" value="20" />
+            </div>
+            <div class="check-row">
+              <label class="check"><input type="checkbox" id="shuffleCheck" checked /> Xáo câu hỏi</label>
+              <label class="check"><input type="checkbox" id="showAnswerCheck" /> Hiện đáp án ngay sau khi chọn</label>
+              <label class="check"><input type="checkbox" id="reviewWrongOnlyCheck" /> Chỉ ôn các câu đã sai</label>
+            </div>
+          </div>
+          <div class="actions">
+            <button class="btn-primary" id="startBtn">Bắt đầu học</button>
+            <button class="btn-secondary" id="continueBtn">Tiếp tục lần trước</button>
+            <button class="btn-danger" id="resetBtn">Xóa tiến độ</button>
+          </div>
+          <div class="footer-note">
+            Phím tắt: 1, 2, 3, 4 để chọn đáp án. Enter sang câu tiếp. R xem đáp án. N sang câu mới. P quay lại câu trước.
+          </div>
+        </div>
+
+        <div class="card" style="padding:18px;">
+          <h2 class="section-title">Tổng quan ngân hàng câu hỏi</h2>
+          <div class="stats" id="statsBox"></div>
+          <div class="footer-note" id="statusText"></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="quizView" class="card">
+      <div class="topbar">
+        <div class="badge" id="quizMeta">Bài học</div>
+        <div class="badge" id="scoreMeta">Điểm hiện tại: 0</div>
+      </div>
+      <div class="progress"><div class="bar" id="progressBar"></div></div>
+      <div class="question-box">
+        <div class="question-meta" id="questionMeta"></div>
+        <div class="question-text" id="questionText"></div>
+        <div class="options" id="optionsBox"></div>
+        <div class="feedback" id="feedback"></div>
+      </div>
+      <div class="nav">
+        <button class="btn-secondary" id="prevBtn">Câu trước</button>
+        <button class="btn-secondary" id="showAnswerBtn">Xem đáp án</button>
+        <button class="btn-primary" id="nextBtn">Câu tiếp</button>
+        <button class="btn-danger" id="submitBtn">Nộp bài</button>
+      </div>
+    </div>
+
+    <div id="resultView" class="card">
+      <h2 class="section-title">Kết quả ôn tập</h2>
+      <div class="result-grid">
+        <div class="result-card"><div class="muted small">Tổng câu</div><div class="big" id="rTotal">0</div></div>
+        <div class="result-card"><div class="muted small">Đúng</div><div class="big" id="rCorrect">0</div></div>
+        <div class="result-card"><div class="muted small">Sai</div><div class="big" id="rWrong">0</div></div>
+        <div class="result-card"><div class="muted small">Điểm</div><div class="big" id="rScore">0%</div></div>
+      </div>
+      <div class="actions">
+        <button class="btn-primary" id="restartBtn">Làm bài mới</button>
+        <button class="btn-secondary" id="reviewWrongBtn">Ôn lại câu sai</button>
+      </div>
+      <div id="reviewBox" style="margin-top:18px;"></div>
+    </div>
+  </div>
+
+  <script>
+    const QUESTION_BANK = [{"tap": "Tập 1. Để không có tiền vẫn tạo ra tiền", "question": "Theo tư duy của Cha Giàu, khác biệt lớn nhất giữa người làm thuê và người tự do tài chính là gì?", "options": [{"key": "A", "text": "Người tự do tài chính làm việc ít hơn"}, {"key": "B", "text": "Người tự do tài chính để tiền làm việc cho mình"}, {"key": "C", "text": "Người tự do tài chính luôn có bằng cấp cao"}, {"key": "D", "text": "Người tự do tài chính tránh mọi rủi ro"}], "answer": "B"}, {"tap": "Tập 1. Để không có tiền vẫn tạo ra tiền", "question": "Một khoản nào dưới đây thường được xem là tài sản theo cách hiểu của bộ sách?", "options": [{"key": "A", "text": "Chiếc xe cá nhân vừa mua trả góp"}, {"key": "B", "text": "Ngôi nhà ở duy nhất nhưng chỉ phát sinh chi phí"}, {"key": "C", "text": "Cửa hàng cho thuê tạo ra dòng tiền dương"}, {"key": "D", "text": "Điện thoại mới nhất"}], "answer": "C"}, {"tap": "Tập 1. Để không có tiền vẫn tạo ra tiền", "question": "Bài học cốt lõi về thu nhập trong tập 1 là gì?", "options": [{"key": "A", "text": "Chỉ cần tăng lương là đủ giàu"}, {"key": "B", "text": "Thu nhập chủ động quan trọng hơn mọi thứ khác"}, {"key": "C", "text": "Cần xây hệ thống tạo thu nhập thụ động"}, {"key": "D", "text": "Phải tiết kiệm toàn bộ tiền kiếm được"}], "answer": "C"}, {"tap": "Tập 1. Để không có tiền vẫn tạo ra tiền", "question": "Khi gặp nỗi sợ mất tiền, phản ứng mà Cha Giàu khuyến khích là gì?", "options": [{"key": "A", "text": "Trốn tránh mọi quyết định tài chính"}, {"key": "B", "text": "Học cách phân tích trước khi hành động"}, {"key": "C", "text": "Giao hết tiền cho người khác quyết định"}, {"key": "D", "text": "Dùng nợ để gỡ gạc nhanh"}], "answer": "B"}, {"tap": "Tập 1. Để không có tiền vẫn tạo ra tiền", "question": "Vì sao bộ sách nhấn mạnh giáo dục tài chính hơn điểm số ở trường?", "options": [{"key": "A", "text": "Vì điểm số không ảnh hưởng đến nghề nghiệp"}, {"key": "B", "text": "Vì trường học thường ít dạy cách quản lý tiền và tài sản"}, {"key": "C", "text": "Vì ai học giỏi cũng khó thành công"}, {"key": "D", "text": "Vì tài chính chỉ cần may mắn"}], "answer": "B"}, {"tap": "Tập 1. Để không có tiền vẫn tạo ra tiền", "question": "Nếu một người mua thêm tài sản tạo dòng tiền mỗi tháng, điều gì có khả năng xảy ra lâu dài?", "options": [{"key": "A", "text": "Gánh nặng chi tiêu giảm ít nhất một phần"}, {"key": "B", "text": "Thuế tự động bằng 0"}, {"key": "C", "text": "Không cần làm việc nữa ngay lập tức"}, {"key": "D", "text": "Rủi ro biến mất hoàn toàn"}], "answer": "A"}, {"tap": "Tập 1. Để không có tiền vẫn tạo ra tiền", "question": "Trong bộ sách, 'làm việc để học' thường có nghĩa là gì?", "options": [{"key": "A", "text": "Chỉ chọn việc lương cao nhất"}, {"key": "B", "text": "Chọn công việc giúp phát triển kỹ năng quan trọng cho tương lai"}, {"key": "C", "text": "Làm càng nhiều giờ càng tốt"}, {"key": "D", "text": "Làm việc không cần mục tiêu"}], "answer": "B"}, {"tap": "Tập 1. Để không có tiền vẫn tạo ra tiền", "question": "Sai lầm phổ biến mà tập 1 cảnh báo là gì?", "options": [{"key": "A", "text": "Dùng toàn bộ thu nhập để mua tiêu sản trông như tài sản"}, {"key": "B", "text": "Đọc quá nhiều sách"}, {"key": "C", "text": "Đầu tư sau khi đã hiểu sản phẩm"}, {"key": "D", "text": "Ghi chép chi tiêu cá nhân"}], "answer": "A"}, {"tap": "Tập 2. Sử dụng đồng vốn", "question": "'Sử dụng đồng vốn' nhấn mạnh vai trò nào của đòn bẩy tài chính?", "options": [{"key": "A", "text": "Đòn bẩy luôn xấu"}, {"key": "B", "text": "Đòn bẩy có thể tăng hiệu quả nếu hiểu cách kiểm soát"}, {"key": "C", "text": "Đòn bẩy chỉ dành cho người rất giàu"}, {"key": "D", "text": "Đòn bẩy giúp loại bỏ rủi ro"}], "answer": "B"}, {"tap": "Tập 2. Sử dụng đồng vốn", "question": "Khi dùng vốn vay để đầu tư, yếu tố nào cần được xem trước nhất?", "options": [{"key": "A", "text": "Màu sắc thương hiệu dự án"}, {"key": "B", "text": "Khả năng tạo dòng tiền và trả nợ"}, {"key": "C", "text": "Ý kiến của số đông"}, {"key": "D", "text": "Tin đồn trên mạng"}], "answer": "B"}, {"tap": "Tập 2. Sử dụng đồng vốn", "question": "Một nhà đầu tư hiểu 'chi phí vốn' sẽ quan tâm nhất điều nào?", "options": [{"key": "A", "text": "Tiền vay hoặc tiền bỏ vào có giá của nó"}, {"key": "B", "text": "Vốn càng nhiều càng chắc thắng"}, {"key": "C", "text": "Lãi suất không ảnh hưởng lợi nhuận"}, {"key": "D", "text": "Vốn cá nhân luôn miễn phí"}], "answer": "A"}, {"tap": "Tập 2. Sử dụng đồng vốn", "question": "Trong tư duy của Cha Giàu, tại sao người thiếu kiến thức dễ bị nợ làm hại?", "options": [{"key": "A", "text": "Vì nợ luôn là bất hợp pháp"}, {"key": "B", "text": "Vì họ thường vay cho tiêu dùng thay vì tài sản tạo tiền"}, {"key": "C", "text": "Vì ngân hàng không cho vay"}, {"key": "D", "text": "Vì thuế cấm dùng nợ"}], "answer": "B"}, {"tap": "Tập 2. Sử dụng đồng vốn", "question": "Khi một cơ hội đầu tư dùng vốn vay nhưng dòng tiền âm kéo dài, quyết định thận trọng là gì?", "options": [{"key": "A", "text": "Tăng vay thêm để che lỗ"}, {"key": "B", "text": "Đánh giá lại mô hình và khả năng thoát ra"}, {"key": "C", "text": "Bỏ qua vì tài sản nào cũng tăng giá"}, {"key": "D", "text": "Giữ nguyên vì đã lỡ tham gia"}], "answer": "B"}, {"tap": "Tập 2. Sử dụng đồng vốn", "question": "Lý do nên học về thuế và pháp lý trước khi dùng đòn bẩy là gì?", "options": [{"key": "A", "text": "Để khoe kiến thức"}, {"key": "B", "text": "Để tối ưu cấu trúc giao dịch và tránh rủi ro không cần thiết"}, {"key": "C", "text": "Để không cần kế toán"}, {"key": "D", "text": "Để không phải trả thuế nữa"}], "answer": "B"}, {"tap": "Tập 2. Sử dụng đồng vốn", "question": "Theo tinh thần tập 2, người khôn ngoan thường dùng tiền như thế nào?", "options": [{"key": "A", "text": "Biến tiền thành công cụ mua tài sản tốt"}, {"key": "B", "text": "Cất toàn bộ tiền mặt ở nhà"}, {"key": "C", "text": "Mua món thể hiện đẳng cấp trước"}, {"key": "D", "text": "Chi hết rồi tính sau"}], "answer": "A"}, {"tap": "Tập 2. Sử dụng đồng vốn", "question": "Điểm khác nhau giữa 'nợ tốt' và 'nợ xấu' gần nhất với cách hiểu nào?", "options": [{"key": "A", "text": "Nợ tốt là nợ lãi cao"}, {"key": "B", "text": "Nợ tốt hỗ trợ tạo thu nhập, nợ xấu chủ yếu nuôi tiêu dùng"}, {"key": "C", "text": "Nợ tốt là vay ngắn hạn"}, {"key": "D", "text": "Nợ xấu là nợ ngân hàng"}], "answer": "B"}, {"tap": "Tập 3. Hướng dẫn đầu tư", "question": "Trong đầu tư, bước quan trọng trước khi bỏ tiền là gì?", "options": [{"key": "A", "text": "Nghe người quen nói có lãi"}, {"key": "B", "text": "Hiểu loại tài sản và chiến lược thoát lệnh"}, {"key": "C", "text": "Chọn thị trường đang nóng nhất"}, {"key": "D", "text": "Tăng quy mô trước khi thử nhỏ"}], "answer": "B"}, {"tap": "Tập 3. Hướng dẫn đầu tư", "question": "Nhà đầu tư giỏi theo bộ sách thường ưu tiên điều nào?", "options": [{"key": "A", "text": "Kiểm soát rủi ro trước lợi nhuận"}, {"key": "B", "text": "Lợi nhuận cao bằng mọi giá"}, {"key": "C", "text": "Đầu tư theo cảm xúc"}, {"key": "D", "text": "Mua vì sợ bỏ lỡ"}], "answer": "A"}, {"tap": "Tập 3. Hướng dẫn đầu tư", "question": "Một dấu hiệu cho thấy bạn đang đầu cơ nhiều hơn đầu tư là gì?", "options": [{"key": "A", "text": "Bạn có kế hoạch và tiêu chí rõ"}, {"key": "B", "text": "Bạn mua chỉ vì giá đang tăng nhanh"}, {"key": "C", "text": "Bạn đọc báo cáo tài chính"}, {"key": "D", "text": "Bạn hiểu dòng tiền tài sản"}], "answer": "B"}, {"tap": "Tập 3. Hướng dẫn đầu tư", "question": "Tập 3 khuyến khích nhà đầu tư phát triển năng lực nào mạnh nhất?", "options": [{"key": "A", "text": "Phụ thuộc hoàn toàn chuyên gia"}, {"key": "B", "text": "Tự nghiên cứu và ra quyết định có cơ sở"}, {"key": "C", "text": "Tránh học về số liệu"}, {"key": "D", "text": "Chỉ tập trung vào may mắn"}], "answer": "B"}, {"tap": "Tập 3. Hướng dẫn đầu tư", "question": "Khi đa dạng hóa danh mục, mục tiêu hợp lý nhất là gì?", "options": [{"key": "A", "text": "Mua mọi thứ đang được nhắc tới"}, {"key": "B", "text": "Phân bổ để giảm rủi ro tập trung"}, {"key": "C", "text": "Tăng giao dịch cho bận rộn"}, {"key": "D", "text": "Che giấu việc không có kế hoạch"}], "answer": "B"}, {"tap": "Tập 3. Hướng dẫn đầu tư", "question": "Khái niệm 'biên an toàn' gần nhất với ý nào?", "options": [{"key": "A", "text": "Mua càng đắt càng an toàn"}, {"key": "B", "text": "Có khoảng đệm giữa giá trị và giá mua để giảm sai số"}, {"key": "C", "text": "Không cần nghiên cứu vì đã có biên"}, {"key": "D", "text": "Chỉ đầu tư khi không có biến động"}], "answer": "B"}, {"tap": "Tập 3. Hướng dẫn đầu tư", "question": "Nếu không hiểu công cụ đầu tư mình sắp mua, lựa chọn hợp lý nhất là gì?", "options": [{"key": "A", "text": "Mua ít thôi cũng được"}, {"key": "B", "text": "Tạm dừng và học thêm trước"}, {"key": "C", "text": "Hỏi nhóm chat rồi mua ngay"}, {"key": "D", "text": "Dùng hết vốn để test"}], "answer": "B"}, {"tap": "Tập 3. Hướng dẫn đầu tư", "question": "Nhà đầu tư dài hạn khác nhà đầu cơ ngắn hạn ở điểm nào rõ nhất?", "options": [{"key": "A", "text": "Họ quan tâm giá trị và dòng tiền hơn dao động ngắn hạn"}, {"key": "B", "text": "Họ không cần quản trị rủi ro"}, {"key": "C", "text": "Họ luôn mua cổ phiếu penny"}, {"key": "D", "text": "Họ không bao giờ bán"}], "answer": "A"}, {"tap": "Tập 4. Con giàu con thông minh", "question": "Tập 4 nhấn mạnh việc dạy trẻ về tiền nên bắt đầu từ đâu?", "options": [{"key": "A", "text": "Cho thật nhiều tiền tiêu vặt"}, {"key": "B", "text": "Dạy phân biệt tài sản, tiêu sản và trách nhiệm với tiền"}, {"key": "C", "text": "Bắt trẻ đầu tư sớm bằng nợ vay"}, {"key": "D", "text": "Chỉ dạy khi vào đại học"}], "answer": "B"}, {"tap": "Tập 4. Con giàu con thông minh", "question": "Một cách tốt để trẻ hiểu giá trị đồng tiền là gì?", "options": [{"key": "A", "text": "Được trải nghiệm làm việc, tiết kiệm và ra quyết định nhỏ"}, {"key": "B", "text": "Mặc định có tiền từ gia đình"}, {"key": "C", "text": "Chỉ học lý thuyết về kinh tế vĩ mô"}, {"key": "D", "text": "Tránh nói về tiền trước mặt trẻ"}], "answer": "A"}, {"tap": "Tập 4. Con giàu con thông minh", "question": "Theo tinh thần của bộ sách, cha mẹ nên làm gì để trẻ phát triển tư duy tài chính?", "options": [{"key": "A", "text": "Giải quyết mọi vấn đề tiền bạc thay trẻ"}, {"key": "B", "text": "Tạo môi trường cho trẻ suy nghĩ và chịu trách nhiệm ở mức phù hợp"}, {"key": "C", "text": "Thưởng tiền vô điều kiện"}, {"key": "D", "text": "Chỉ nhấn mạnh tiết kiệm, không cần học đầu tư"}], "answer": "B"}, {"tap": "Tập 4. Con giàu con thông minh", "question": "Bài học nào phù hợp nhất với 'con giàu con thông minh'?", "options": [{"key": "A", "text": "Thông minh tài chính là biết dùng tiền tạo thêm giá trị"}, {"key": "B", "text": "Thông minh tài chính là thuộc nhiều công thức"}, {"key": "C", "text": "Thông minh tài chính là né mọi sai lầm"}, {"key": "D", "text": "Thông minh tài chính là tiêu ít nhất có thể"}], "answer": "A"}, {"tap": "Tập 4. Con giàu con thông minh", "question": "Nếu trẻ được cho tiền tiêu vặt, cha mẹ nên khuyến khích cách nào?", "options": [{"key": "A", "text": "Tiêu hết để khỏi giữ tiền"}, {"key": "B", "text": "Chia thành tiêu dùng, tiết kiệm, học hỏi hoặc đầu tư nhỏ"}, {"key": "C", "text": "Đưa bạn bè quyết định thay"}, {"key": "D", "text": "Cất kín và không dùng"}], "answer": "B"}, {"tap": "Tập 4. Con giàu con thông minh", "question": "Vì sao các trò chơi mô phỏng tiền bạc có ích với trẻ?", "options": [{"key": "A", "text": "Vì giúp luyện ra quyết định mà rủi ro thật thấp"}, {"key": "B", "text": "Vì thay được hoàn toàn kinh nghiệm thực tế"}, {"key": "C", "text": "Vì không cần phụ huynh hướng dẫn"}, {"key": "D", "text": "Vì chắc chắn tạo ra lợi nhuận"}], "answer": "A"}, {"tap": "Tập 4. Con giàu con thông minh", "question": "Sai lầm lớn khi dạy con về tiền là gì?", "options": [{"key": "A", "text": "Để trẻ đặt câu hỏi"}, {"key": "B", "text": "Biến tiền thành điều cấm kỵ không được bàn tới"}, {"key": "C", "text": "Giải thích bằng ví dụ đời sống"}, {"key": "D", "text": "Cho trẻ tham gia kế hoạch mua sắm"}], "answer": "B"}, {"tap": "Tập 4. Con giàu con thông minh", "question": "Tư duy nào sau đây gần với mục tiêu giáo dục tài chính cho trẻ?", "options": [{"key": "A", "text": "Giúp trẻ phụ thuộc vào trợ cấp"}, {"key": "B", "text": "Giúp trẻ biết kiếm, giữ và làm tiền tăng trưởng có trách nhiệm"}, {"key": "C", "text": "Giúp trẻ tiêu nhanh để trải nghiệm"}, {"key": "D", "text": "Giúp trẻ sợ đầu tư"}], "answer": "B"}, {"tap": "Tập 5. Để có sức mạnh tài chính", "question": "'Sức mạnh tài chính' trong bộ sách gần với ý nào nhất?", "options": [{"key": "A", "text": "Có thu nhập cao trong ngắn hạn"}, {"key": "B", "text": "Có khả năng bảo vệ, nhân lên và điều khiển dòng tiền"}, {"key": "C", "text": "Có nhiều thẻ tín dụng"}, {"key": "D", "text": "Có nhiều tài sản xa xỉ"}], "answer": "B"}, {"tap": "Tập 5. Để có sức mạnh tài chính", "question": "Vì sao quản trị rủi ro là phần của sức mạnh tài chính?", "options": [{"key": "A", "text": "Vì lợi nhuận không quan trọng"}, {"key": "B", "text": "Vì giữ được tiền quan trọng như kiếm được tiền"}, {"key": "C", "text": "Vì rủi ro chỉ có trên giấy"}, {"key": "D", "text": "Vì người giàu không bao giờ mất tiền"}], "answer": "B"}, {"tap": "Tập 5. Để có sức mạnh tài chính", "question": "Một người có quỹ dự phòng và bảo hiểm phù hợp đang làm gì?", "options": [{"key": "A", "text": "Tăng khả năng chống sốc tài chính"}, {"key": "B", "text": "Trì hoãn làm giàu vĩnh viễn"}, {"key": "C", "text": "Lo xa quá mức nên không đầu tư được"}, {"key": "D", "text": "Tự làm giảm uy tín tín dụng"}], "answer": "A"}, {"tap": "Tập 5. Để có sức mạnh tài chính", "question": "Khi tài sản tăng lên, thói quen nào nên mạnh hơn?", "options": [{"key": "A", "text": "Bỏ theo dõi dòng tiền"}, {"key": "B", "text": "Nâng chất lượng hệ thống kế toán và kiểm soát"}, {"key": "C", "text": "Tiêu tương xứng để thể hiện"}, {"key": "D", "text": "Dừng học thêm"}], "answer": "B"}, {"tap": "Tập 5. Để có sức mạnh tài chính", "question": "Một doanh nhân muốn bền vững tài chính cần ưu tiên điều nào?", "options": [{"key": "A", "text": "Doanh thu ảo"}, {"key": "B", "text": "Dòng tiền thực và khả năng chịu biến động"}, {"key": "C", "text": "Hình ảnh sang trọng trước"}, {"key": "D", "text": "Mở rộng bằng mọi giá"}], "answer": "B"}, {"tap": "Tập 5. Để có sức mạnh tài chính", "question": "Khái niệm bảo toàn vốn nhắc nhở điều gì?", "options": [{"key": "A", "text": "Đừng bao giờ đầu tư"}, {"key": "B", "text": "Mỗi quyết định phải nghĩ cả chiều kiếm tiền lẫn giữ tiền"}, {"key": "C", "text": "Chỉ mua vàng"}, {"key": "D", "text": "Chỉ tin vào cảm giác"}], "answer": "B"}, {"tap": "Tập 5. Để có sức mạnh tài chính", "question": "Nếu lợi nhuận cao nhưng pháp lý mờ và rủi ro lớn, cách tiếp cận phù hợp là gì?", "options": [{"key": "A", "text": "Vào nhanh để chiếm chỗ"}, {"key": "B", "text": "Thẩm định kỹ trước khi chấp nhận rủi ro"}, {"key": "C", "text": "Mượn thêm tiền để tăng lợi nhuận"}, {"key": "D", "text": "Tin người giới thiệu"}], "answer": "B"}, {"tap": "Tập 5. Để có sức mạnh tài chính", "question": "Một dấu hiệu của người có sức mạnh tài chính là gì?", "options": [{"key": "A", "text": "Họ quyết định dựa trên số liệu và nguyên tắc"}, {"key": "B", "text": "Họ chỉ nghe cảm xúc"}, {"key": "C", "text": "Họ giấu hết sổ sách"}, {"key": "D", "text": "Họ không bao giờ dùng cố vấn"}], "answer": "A"}, {"tap": "Tập 6. Những câu chuyện thành công", "question": "Các câu chuyện thành công trong tập 6 chủ yếu muốn truyền điều gì?", "options": [{"key": "A", "text": "Làm giàu luôn rất nhanh"}, {"key": "B", "text": "Thành công thường đến từ học hỏi, kiên trì và hành động có hệ thống"}, {"key": "C", "text": "Chỉ cần một cơ hội may mắn"}, {"key": "D", "text": "Người thường khó thành công"}], "answer": "B"}, {"tap": "Tập 6. Những câu chuyện thành công", "question": "Giá trị lớn nhất của việc đọc câu chuyện người thành công là gì?", "options": [{"key": "A", "text": "Bắt chước y nguyên mọi chi tiết"}, {"key": "B", "text": "Rút ra nguyên lý có thể áp dụng cho hoàn cảnh của mình"}, {"key": "C", "text": "Tập trung vào hào quang"}, {"key": "D", "text": "So sánh để tự ti"}], "answer": "B"}, {"tap": "Tập 6. Những câu chuyện thành công", "question": "Điểm chung thường thấy ở người đạt tự do tài chính là gì?", "options": [{"key": "A", "text": "Không từng thất bại"}, {"key": "B", "text": "Biết học từ sai lầm và tiếp tục điều chỉnh"}, {"key": "C", "text": "Luôn khởi đầu rất giàu"}, {"key": "D", "text": "Không cần đội ngũ"}], "answer": "B"}, {"tap": "Tập 6. Những câu chuyện thành công", "question": "Khi học từ case study, câu hỏi hữu ích nhất là gì?", "options": [{"key": "A", "text": "Họ mặc gì khi làm việc?"}, {"key": "B", "text": "Họ đã dùng nguyên tắc nào để giải quyết vấn đề?"}, {"key": "C", "text": "Họ nổi tiếng từ bao giờ?"}, {"key": "D", "text": "Họ dùng điện thoại gì?"}], "answer": "B"}, {"tap": "Tập 6. Những câu chuyện thành công", "question": "Một câu chuyện thành công có giá trị thực tế khi nào?", "options": [{"key": "A", "text": "Khi chỉ tạo cảm hứng"}, {"key": "B", "text": "Khi biến được thành bài học hành động cụ thể"}, {"key": "C", "text": "Khi có thật nhiều con số hoành tráng"}, {"key": "D", "text": "Khi nhân vật không có thất bại"}], "answer": "B"}, {"tap": "Tập 6. Những câu chuyện thành công", "question": "Nếu một nhân vật thành công nhờ kỷ luật tài chính, bài học đúng là gì?", "options": [{"key": "A", "text": "Kỷ luật giúp tích lũy lợi thế dài hạn"}, {"key": "B", "text": "Kỷ luật chỉ dành cho người nghèo"}, {"key": "C", "text": "Kỷ luật làm mất cơ hội"}, {"key": "D", "text": "Kỷ luật thay thế hoàn toàn chiến lược"}], "answer": "A"}, {"tap": "Tập 6. Những câu chuyện thành công", "question": "Sai lầm khi đọc chuyện thành công là gì?", "options": [{"key": "A", "text": "Soi vào quá trình"}, {"key": "B", "text": "Chỉ nhìn kết quả cuối cùng mà bỏ qua hệ thống phía sau"}, {"key": "C", "text": "Ghi lại ý chính"}, {"key": "D", "text": "Liên hệ với bản thân"}], "answer": "B"}, {"tap": "Tập 6. Những câu chuyện thành công", "question": "Thông điệp hợp lý nhất của tập 6 là gì?", "options": [{"key": "A", "text": "Muốn giàu phải giống hệt người khác"}, {"key": "B", "text": "Có thể học đường đi từ người đi trước nhưng vẫn cần tự chịu trách nhiệm"}, {"key": "C", "text": "Chờ động lực đủ lớn mới bắt đầu"}, {"key": "D", "text": "Càng nổi tiếng càng đáng tin tuyệt đối"}], "answer": "B"}, {"tap": "Tập 7. Ai đã lấy tiền của tôi?", "question": "Tựa đề 'Ai đã lấy tiền của tôi?' gợi người đọc chú ý mạnh nhất đến điều nào?", "options": [{"key": "A", "text": "Mất tiền vì mua sắm nhỏ lẻ"}, {"key": "B", "text": "Những lực kéo âm thầm như thuế, lạm phát, phí và quyết định kém hiểu biết"}, {"key": "C", "text": "Chỉ có trộm cắp vật lý"}, {"key": "D", "text": "Mất tiền vì không đổi ngoại tệ"}], "answer": "B"}, {"tap": "Tập 7. Ai đã lấy tiền của tôi?", "question": "Lạm phát ảnh hưởng tiền mặt như thế nào?", "options": [{"key": "A", "text": "Làm sức mua của tiền giảm theo thời gian"}, {"key": "B", "text": "Làm tiền mặt tự tăng giá trị"}, {"key": "C", "text": "Chỉ ảnh hưởng người giàu"}, {"key": "D", "text": "Không liên quan đầu tư"}], "answer": "A"}, {"tap": "Tập 7. Ai đã lấy tiền của tôi?", "question": "Vì sao phí nhỏ nhưng lặp lại nguy hiểm?", "options": [{"key": "A", "text": "Vì khó ghi chép"}, {"key": "B", "text": "Vì chúng bào mòn dòng tiền tích lũy dài hạn"}, {"key": "C", "text": "Vì pháp luật cấm"}, {"key": "D", "text": "Vì luôn lớn hơn thuế"}], "answer": "B"}, {"tap": "Tập 7. Ai đã lấy tiền của tôi?", "question": "Một người gửi toàn bộ tiền vào nơi lợi suất thấp hơn lạm phát đang gặp vấn đề gì?", "options": [{"key": "A", "text": "Tiền danh nghĩa tăng nhưng giá trị thực có thể giảm"}, {"key": "B", "text": "Đang tối ưu tài sản"}, {"key": "C", "text": "Không chịu rủi ro nào"}, {"key": "D", "text": "Đang tạo biên an toàn lớn"}], "answer": "A"}, {"tap": "Tập 7. Ai đã lấy tiền của tôi?", "question": "Học về thuế giúp ích gì theo tinh thần bộ sách?", "options": [{"key": "A", "text": "Biết cách tuân thủ và cấu trúc hợp lý hơn"}, {"key": "B", "text": "Không cần làm việc nữa"}, {"key": "C", "text": "Tránh hoàn toàn mọi nghĩa vụ"}, {"key": "D", "text": "Luôn được hoàn thuế"}], "answer": "A"}, {"tap": "Tập 7. Ai đã lấy tiền của tôi?", "question": "Một khoản vay tiêu dùng lãi cao có thể 'lấy tiền của bạn' theo cách nào?", "options": [{"key": "A", "text": "Tăng áp lực trả lãi, làm chậm tích lũy tài sản"}, {"key": "B", "text": "Làm hồ sơ đẹp hơn"}, {"key": "C", "text": "Tăng dòng tiền thụ động"}, {"key": "D", "text": "Giúp chống lạm phát"}], "answer": "A"}, {"tap": "Tập 7. Ai đã lấy tiền của tôi?", "question": "Trong đời sống hàng ngày, cách chống thất thoát tài chính tốt nhất là gì?", "options": [{"key": "A", "text": "Không nhìn báo cáo tài khoản"}, {"key": "B", "text": "Theo dõi dòng tiền và hiểu các chi phí ẩn"}, {"key": "C", "text": "Tiêu nhanh trước khi tăng giá"}, {"key": "D", "text": "Chỉ giữ hóa đơn lớn"}], "answer": "B"}, {"tap": "Tập 7. Ai đã lấy tiền của tôi?", "question": "Bài học sâu hơn của tập 7 là gì?", "options": [{"key": "A", "text": "Tiền chỉ mất khi bị lừa"}, {"key": "B", "text": "Nhiều người mất tiền vì không hiểu hệ thống tiền tệ và nghĩa vụ tài chính"}, {"key": "C", "text": "Chỉ doanh nghiệp mới cần kế toán"}, {"key": "D", "text": "Người làm công không cần học về tiền"}], "answer": "B"}, {"tap": "Tập 8. Để có những đồng tiền tích cực", "question": "'Đồng tiền tích cực' trong tinh thần bộ sách gần nhất với ý nào?", "options": [{"key": "A", "text": "Tiền gắn với giá trị, trách nhiệm và tư duy lành mạnh"}, {"key": "B", "text": "Tiền chỉ để tiêu cho vui"}, {"key": "C", "text": "Tiền là thứ phải né tránh"}, {"key": "D", "text": "Tiền kiếm càng nhanh càng tốt bất chấp cách làm"}], "answer": "A"}, {"tap": "Tập 8. Để có những đồng tiền tích cực", "question": "Một niềm tin tiêu cực về tiền có thể gây hại ra sao?", "options": [{"key": "A", "text": "Làm người ta né học tài chính và tự giới hạn cơ hội"}, {"key": "B", "text": "Làm lạm phát tăng"}, {"key": "C", "text": "Tự động tăng thuế"}, {"key": "D", "text": "Biến đầu tư thành bất hợp pháp"}], "answer": "A"}, {"tap": "Tập 8. Để có những đồng tiền tích cực", "question": "Theo tư duy phát triển, câu nào phù hợp hơn?", "options": [{"key": "A", "text": "Người giàu chắc chắn xấu"}, {"key": "B", "text": "Tiền là công cụ, vấn đề là cách mình sử dụng"}, {"key": "C", "text": "Có tiền thì không cần học nữa"}, {"key": "D", "text": "Tiền và đạo đức luôn đối lập"}], "answer": "B"}, {"tap": "Tập 8. Để có những đồng tiền tích cực", "question": "Khi muốn xây quan hệ lành mạnh với tiền, bước nào hợp lý?", "options": [{"key": "A", "text": "Quan sát thói quen chi tiêu và niềm tin của bản thân"}, {"key": "B", "text": "So sánh bản thân với người giàu hơn"}, {"key": "C", "text": "Tiêu hết để giải tỏa cảm xúc"}, {"key": "D", "text": "Từ chối mọi cơ hội tăng thu nhập"}], "answer": "A"}, {"tap": "Tập 8. Để có những đồng tiền tích cực", "question": "Vì sao lòng biết ơn và giá trị phục vụ được nhắc đến trong chuyện tiền bạc?", "options": [{"key": "A", "text": "Vì tạo nền cho tư duy bền vững thay vì tham ngắn hạn"}, {"key": "B", "text": "Vì thay thế hoàn toàn kỹ năng tài chính"}, {"key": "C", "text": "Vì không cần lợi nhuận"}, {"key": "D", "text": "Vì giúp trốn tránh cạnh tranh"}], "answer": "A"}, {"tap": "Tập 8. Để có những đồng tiền tích cực", "question": "Một người có tư duy tiền tích cực thường làm gì?", "options": [{"key": "A", "text": "Chủ động học, kiếm, quản lý và cho đi có trách nhiệm"}, {"key": "B", "text": "Chỉ nói về ước mơ"}, {"key": "C", "text": "Đổ lỗi cho hoàn cảnh mãi mãi"}, {"key": "D", "text": "Mua sắm để chứng minh giá trị bản thân"}], "answer": "A"}, {"tap": "Tập 8. Để có những đồng tiền tích cực", "question": "Sai lầm phổ biến trong quan hệ với tiền là gì?", "options": [{"key": "A", "text": "Cho rằng cảm xúc không ảnh hưởng quyết định tài chính"}, {"key": "B", "text": "Ghi chép tài chính mỗi tháng"}, {"key": "C", "text": "Dành tiền cho học tập"}, {"key": "D", "text": "Lập mục tiêu tài chính"}], "answer": "A"}, {"tap": "Tập 8. Để có những đồng tiền tích cực", "question": "Thông điệp phù hợp nhất với tập 8 là gì?", "options": [{"key": "A", "text": "Muốn tiền tốt thì phải may mắn"}, {"key": "B", "text": "Muốn tiền ở lại lâu, cần tư duy đúng và hành vi đúng"}, {"key": "C", "text": "Chỉ cần kiếm nhiều là đủ"}, {"key": "D", "text": "Không cần quan tâm giá trị tạo ra"}], "answer": "B"}, {"tap": "Tập 9. Những bí mật về tiền bạc mà bạn không học ở nhà trường", "question": "Tập 9 nhấn mạnh khoảng trống lớn nào của giáo dục phổ thông?", "options": [{"key": "A", "text": "Thiếu môn thể thao"}, {"key": "B", "text": "Thiếu kiến thức thực hành về tiền bạc, tài sản và quyết định tài chính"}, {"key": "C", "text": "Thiếu ngoại ngữ thứ ba"}, {"key": "D", "text": "Thiếu nghệ thuật trình diễn"}], "answer": "B"}, {"tap": "Tập 9. Những bí mật về tiền bạc mà bạn không học ở nhà trường", "question": "Một kỹ năng tài chính cơ bản mà nhiều người không được dạy sớm là gì?", "options": [{"key": "A", "text": "Đọc hiểu báo cáo dòng tiền đơn giản"}, {"key": "B", "text": "Thuộc tên các nhà kinh tế"}, {"key": "C", "text": "Tính logarit"}, {"key": "D", "text": "Làm video ngắn"}], "answer": "A"}, {"tap": "Tập 9. Những bí mật về tiền bạc mà bạn không học ở nhà trường", "question": "Vì sao hiểu chênh lệch giữa doanh thu và lợi nhuận lại quan trọng?", "options": [{"key": "A", "text": "Vì doanh thu cao chưa chắc giữ lại được tiền"}, {"key": "B", "text": "Vì lợi nhuận không liên quan kinh doanh"}, {"key": "C", "text": "Vì chỉ doanh nghiệp lớn mới cần"}, {"key": "D", "text": "Vì kế toán tự xử lý hết"}], "answer": "A"}, {"tap": "Tập 9. Những bí mật về tiền bạc mà bạn không học ở nhà trường", "question": "Một người không học về nợ, lãi suất và thời gian thường dễ gặp gì?", "options": [{"key": "A", "text": "Ra quyết định vay mượn bất lợi"}, {"key": "B", "text": "Có lợi thế cạnh tranh hơn"}, {"key": "C", "text": "Tự động tiết kiệm tốt"}, {"key": "D", "text": "Luôn chọn đúng đầu tư"}], "answer": "A"}, {"tap": "Tập 9. Những bí mật về tiền bạc mà bạn không học ở nhà trường", "question": "Khái niệm giá trị thời gian của tiền nhắc điều gì?", "options": [{"key": "A", "text": "1 đồng hôm nay và 1 đồng tương lai luôn như nhau"}, {"key": "B", "text": "Tiền hôm nay có thể có giá trị khác tiền nhận trong tương lai"}, {"key": "C", "text": "Chỉ áp dụng cho ngân hàng trung ương"}, {"key": "D", "text": "Không liên quan cá nhân"}], "answer": "B"}, {"tap": "Tập 9. Những bí mật về tiền bạc mà bạn không học ở nhà trường", "question": "Nếu một người chỉ học kiếm tiền mà không học giữ tiền, điều gì dễ xảy ra?", "options": [{"key": "A", "text": "Tích lũy sẽ bền hơn"}, {"key": "B", "text": "Thu nhập tăng nhưng tài sản ròng không tăng tương xứng"}, {"key": "C", "text": "Không phải đóng thuế"}, {"key": "D", "text": "Rủi ro tự giảm"}], "answer": "B"}, {"tap": "Tập 9. Những bí mật về tiền bạc mà bạn không học ở nhà trường", "question": "Bài học 'không có ở nhà trường' thường hướng người đọc đến điều gì?", "options": [{"key": "A", "text": "Tự học tài chính suốt đời"}, {"key": "B", "text": "Bỏ qua người hướng dẫn"}, {"key": "C", "text": "Chỉ tin vào bằng cấp"}, {"key": "D", "text": "Đầu tư không cần hiểu"}], "answer": "A"}, {"tap": "Tập 9. Những bí mật về tiền bạc mà bạn không học ở nhà trường", "question": "Trong đời sống thực tế, hiểu tiền bạc tốt giúp bạn điều nào sau đây?", "options": [{"key": "A", "text": "Chọn quyết định ít bị cảm xúc và quảng cáo chi phối hơn"}, {"key": "B", "text": "Không bao giờ sai"}, {"key": "C", "text": "Không cần kế hoạch"}, {"key": "D", "text": "Luôn giàu ngay"}], "answer": "A"}, {"tap": "Tập 10. Trước khi bạn thôi việc", "question": "Tập 10 phù hợp nhất với ai?", "options": [{"key": "A", "text": "Người muốn xây lộ trình kinh doanh trước khi rời công việc hiện tại"}, {"key": "B", "text": "Người chỉ muốn nghỉ việc ngay"}, {"key": "C", "text": "Người không muốn học kỹ năng mới"}, {"key": "D", "text": "Người tin rằng kinh doanh không cần hệ thống"}], "answer": "A"}, {"tap": "Tập 10. Trước khi bạn thôi việc", "question": "Thông điệp trọng tâm của 'Trước khi bạn thôi việc' là gì?", "options": [{"key": "A", "text": "Bỏ việc càng sớm càng tốt"}, {"key": "B", "text": "Hãy chuẩn bị kỹ năng, dòng tiền và hệ thống trước khi chuyển đổi"}, {"key": "C", "text": "Chỉ cần đam mê là đủ"}, {"key": "D", "text": "Kinh doanh tốt nhất là làm một mình"}], "answer": "B"}, {"tap": "Tập 10. Trước khi bạn thôi việc", "question": "Một dấu hiệu cho thấy bạn chưa nên rời công việc chính là gì?", "options": [{"key": "A", "text": "Mô hình kinh doanh chưa được kiểm chứng"}, {"key": "B", "text": "Bạn đang học thêm kỹ năng bán hàng"}, {"key": "C", "text": "Bạn đã có quỹ dự phòng"}, {"key": "D", "text": "Bạn hiểu khách hàng mục tiêu"}], "answer": "A"}, {"tap": "Tập 10. Trước khi bạn thôi việc", "question": "Theo tinh thần bộ sách, tài sản vô hình quan trọng trước khi khởi nghiệp là gì?", "options": [{"key": "A", "text": "Kỹ năng bán hàng và giao tiếp"}, {"key": "B", "text": "Xe đẹp"}, {"key": "C", "text": "Danh thiếp sang trọng"}, {"key": "D", "text": "Văn phòng lớn"}], "answer": "A"}, {"tap": "Tập 10. Trước khi bạn thôi việc", "question": "Vì sao nên thử nhỏ trước khi bỏ việc?", "options": [{"key": "A", "text": "Để kiểm chứng nhu cầu thị trường với rủi ro thấp hơn"}, {"key": "B", "text": "Để trì hoãn mãi mãi"}, {"key": "C", "text": "Vì kinh doanh nhỏ không cần khách hàng"}, {"key": "D", "text": "Vì lợi nhuận nhỏ luôn cao hơn"}], "answer": "A"}, {"tap": "Tập 10. Trước khi bạn thôi việc", "question": "Trong giai đoạn chuyển đổi, sai lầm nguy hiểm là gì?", "options": [{"key": "A", "text": "Bỏ nguồn thu chính khi chưa có kế hoạch tài chính rõ"}, {"key": "B", "text": "Học về khách hàng"}, {"key": "C", "text": "Viết kế hoạch dòng tiền"}, {"key": "D", "text": "Xây kỹ năng trình bày"}], "answer": "A"}, {"tap": "Tập 10. Trước khi bạn thôi việc", "question": "Một người chuẩn bị tốt cho bước ra kinh doanh thường có gì?", "options": [{"key": "A", "text": "Sản phẩm thử nghiệm, kỹ năng bán hàng và kỷ luật tài chính"}, {"key": "B", "text": "Chỉ có động lực mạnh"}, {"key": "C", "text": "Một logo đẹp"}, {"key": "D", "text": "Nhiều lời khuyên trái chiều"}], "answer": "A"}, {"tap": "Tập 11. Trường dạy kinh doanh", "question": "'Trường dạy kinh doanh' trong bộ sách nhấn mạnh doanh nghiệp kiểu nào?", "options": [{"key": "A", "text": "Doanh nghiệp dựa vào một người làm hết"}, {"key": "B", "text": "Doanh nghiệp có hệ thống và khả năng nhân bản"}, {"key": "C", "text": "Doanh nghiệp không cần đào tạo"}, {"key": "D", "text": "Doanh nghiệp chỉ bán một lần"}], "answer": "B"}, {"tap": "Tập 11. Trường dạy kinh doanh", "question": "Một hệ thống kinh doanh tốt giúp điều gì?", "options": [{"key": "A", "text": "Chủ doanh nghiệp ít lệ thuộc vào cá nhân mình hơn"}, {"key": "B", "text": "Không cần nhân sự"}, {"key": "C", "text": "Không cần khách hàng lặp lại"}, {"key": "D", "text": "Không cần quy trình"}], "answer": "A"}, {"tap": "Tập 11. Trường dạy kinh doanh", "question": "Lý do việc đào tạo đội ngũ quan trọng là gì?", "options": [{"key": "A", "text": "Giúp giá bán cao hơn tự động"}, {"key": "B", "text": "Giúp chất lượng vận hành được lặp lại ổn định"}, {"key": "C", "text": "Giúp khỏi cần marketing"}, {"key": "D", "text": "Giúp tránh mọi cạnh tranh"}], "answer": "B"}, {"tap": "Tập 11. Trường dạy kinh doanh", "question": "Trong mô hình kinh doanh bền vững, tài sản lớn nhất thường là gì?", "options": [{"key": "A", "text": "Hệ thống, thương hiệu và mạng lưới con người"}, {"key": "B", "text": "Chi tiêu cá nhân của chủ"}, {"key": "C", "text": "Bàn ghế văn phòng"}, {"key": "D", "text": "Số giờ làm của chủ"}], "answer": "A"}, {"tap": "Tập 11. Trường dạy kinh doanh", "question": "Vì sao người thích giúp đỡ người khác có thể phù hợp với kinh doanh?", "options": [{"key": "A", "text": "Vì kinh doanh bền vững thường bắt đầu từ giải quyết vấn đề cho người khác"}, {"key": "B", "text": "Vì giúp người khác sẽ không cần lợi nhuận"}, {"key": "C", "text": "Vì chỉ ngành giáo dục mới giúp người khác"}, {"key": "D", "text": "Vì phục vụ không liên quan bán hàng"}], "answer": "A"}, {"tap": "Tập 11. Trường dạy kinh doanh", "question": "Sai lầm của doanh nghiệp nhỏ thường gặp là gì?", "options": [{"key": "A", "text": "Không biến kinh nghiệm của chủ thành quy trình có thể đào tạo"}, {"key": "B", "text": "Lắng nghe khách hàng"}, {"key": "C", "text": "Theo dõi dòng tiền"}, {"key": "D", "text": "Đo hiệu quả nhân sự"}], "answer": "A"}, {"tap": "Tập 11. Trường dạy kinh doanh", "question": "Bài học cốt lõi của tập 11 là gì?", "options": [{"key": "A", "text": "Muốn lớn, phải nghĩ như người xây hệ thống chứ không chỉ người tự làm"}, {"key": "B", "text": "Doanh nghiệp càng phức tạp càng tốt"}, {"key": "C", "text": "Chỉ cần tuyển thật đông người"}, {"key": "D", "text": "Không cần chiến lược giữ khách"}], "answer": "A"}, {"tap": "Tập 12. Lời tiên tri của cha giàu", "question": "'Lời tiên tri của cha giàu' cảnh báo mạnh về điều gì?", "options": [{"key": "A", "text": "Rủi ro dài hạn của hệ thống tài chính và sự thiếu chuẩn bị của nhiều người"}, {"key": "B", "text": "Mọi ngân hàng sẽ biến mất ngay"}, {"key": "C", "text": "Không nên đầu tư gì cả"}, {"key": "D", "text": "Chỉ cần cất tiền mặt là an toàn tuyệt đối"}], "answer": "A"}, {"tap": "Tập 12. Lời tiên tri của cha giàu", "question": "Vì sao phụ thuộc vào một nguồn thu nhập là rủi ro?", "options": [{"key": "A", "text": "Vì khi hệ thống biến động, bạn dễ mất khả năng chống đỡ"}, {"key": "B", "text": "Vì luật cấm"}, {"key": "C", "text": "Vì chỉ người giàu mới có nhiều nguồn thu"}, {"key": "D", "text": "Vì lương luôn giảm"}], "answer": "A"}, {"tap": "Tập 12. Lời tiên tri của cha giàu", "question": "Bài học nào phù hợp với tinh thần tập 12?", "options": [{"key": "A", "text": "Chuẩn bị trước khi khủng hoảng xảy ra"}, {"key": "B", "text": "Chờ khủng hoảng rồi mới học"}, {"key": "C", "text": "Tin tuyệt đối vào người khác quản tiền"}, {"key": "D", "text": "Bỏ qua lạm phát dài hạn"}], "answer": "A"}, {"tap": "Tập 12. Lời tiên tri của cha giàu", "question": "Một hành động phòng thủ tài chính hợp lý là gì?", "options": [{"key": "A", "text": "Xây quỹ dự phòng và tăng hiểu biết đầu tư"}, {"key": "B", "text": "Dùng toàn bộ đòn bẩy tối đa"}, {"key": "C", "text": "Tiêu trước khi tiền mất giá"}, {"key": "D", "text": "Mua thứ đắt tiền để giữ giá"}], "answer": "A"}, {"tap": "Tập 12. Lời tiên tri của cha giàu", "question": "Nếu hệ thống hưu trí hoặc phúc lợi tương lai kém chắc chắn, cá nhân nên làm gì?", "options": [{"key": "A", "text": "Chủ động tự xây tài sản và dòng tiền riêng"}, {"key": "B", "text": "Mặc kệ vì nhà nước sẽ lo hết"}, {"key": "C", "text": "Không cần học tài chính"}, {"key": "D", "text": "Chỉ gửi tiết kiệm ngắn hạn"}], "answer": "A"}, {"tap": "Tập 12. Lời tiên tri của cha giàu", "question": "Tập 12 muốn người đọc thay đổi tư thế nào?", "options": [{"key": "A", "text": "Từ bị động sang chủ động chuẩn bị"}, {"key": "B", "text": "Từ chủ động sang phụ thuộc"}, {"key": "C", "text": "Từ học hỏi sang suy đoán"}, {"key": "D", "text": "Từ trách nhiệm sang đổ lỗi"}], "answer": "A"}, {"tap": "Tập 12. Lời tiên tri của cha giàu", "question": "Thông điệp sâu của 'lời tiên tri' là gì?", "options": [{"key": "A", "text": "Ai hiểu xu hướng và chuẩn bị sớm sẽ có lợi thế hơn người phó mặc"}, {"key": "B", "text": "Tương lai hoàn toàn không thể chuẩn bị"}, {"key": "C", "text": "Khủng hoảng chỉ ảnh hưởng doanh nghiệp lớn"}, {"key": "D", "text": "Dự báo luôn chính xác tuyệt đối"}], "answer": "A"}, {"tap": "Tập 13. Nâng cao chỉ số IQ tài chính", "question": "'IQ tài chính' trong bộ sách gần nhất với năng lực nào?", "options": [{"key": "A", "text": "Đọc nhanh hơn người khác"}, {"key": "B", "text": "Hiểu và xử lý thông tin tài chính để ra quyết định tốt hơn"}, {"key": "C", "text": "Nhớ nhiều thuật ngữ khó"}, {"key": "D", "text": "Có bằng chuyên ngành tài chính"}], "answer": "B"}, {"tap": "Tập 13. Nâng cao chỉ số IQ tài chính", "question": "Một người có IQ tài chính tốt thường làm gì trước một cơ hội đầu tư?", "options": [{"key": "A", "text": "Hỏi xem người nổi tiếng có mua không"}, {"key": "B", "text": "Phân tích dữ liệu, rủi ro và dòng tiền"}, {"key": "C", "text": "Vào tiền thật nhanh"}, {"key": "D", "text": "Chọn theo cảm xúc"}], "answer": "B"}, {"tap": "Tập 13. Nâng cao chỉ số IQ tài chính", "question": "Vì sao khả năng đọc số liệu quan trọng?", "options": [{"key": "A", "text": "Vì giúp nhìn ra chất lượng tài chính phía sau lời quảng cáo"}, {"key": "B", "text": "Vì làm quyết định chậm đi nên ít hiệu quả"}, {"key": "C", "text": "Vì chỉ kế toán cần"}, {"key": "D", "text": "Vì thay được kinh nghiệm"}], "answer": "A"}, {"tap": "Tập 13. Nâng cao chỉ số IQ tài chính", "question": "Trong các năng lực sau, đâu là phần của IQ tài chính?", "options": [{"key": "A", "text": "Nhận diện đòn bẩy, rủi ro và cơ hội"}, {"key": "B", "text": "Mặc cả khi mua sắm"}, {"key": "C", "text": "Giao tiếp xã giao"}, {"key": "D", "text": "Trang trí văn phòng"}], "answer": "A"}, {"tap": "Tập 13. Nâng cao chỉ số IQ tài chính", "question": "Nếu một báo cáo lợi nhuận đẹp nhưng dòng tiền yếu, người có IQ tài chính nên làm gì?", "options": [{"key": "A", "text": "Mua ngay vì lợi nhuận đã cao"}, {"key": "B", "text": "Đào sâu thêm thay vì chỉ nhìn bề mặt"}, {"key": "C", "text": "Bỏ qua vì quá phức tạp"}, {"key": "D", "text": "Tin hoàn toàn vào doanh thu"}], "answer": "B"}, {"tap": "Tập 13. Nâng cao chỉ số IQ tài chính", "question": "Bài học lớn của tập 13 là gì?", "options": [{"key": "A", "text": "Tiền thuộc về người hiểu cách đọc cuộc chơi tài chính"}, {"key": "B", "text": "Muốn giàu chỉ cần chăm chỉ"}, {"key": "C", "text": "Không cần học thêm sau khi có vốn"}, {"key": "D", "text": "IQ tài chính là bẩm sinh"}], "answer": "A"}, {"tap": "Tập 13. Nâng cao chỉ số IQ tài chính", "question": "Cách nâng IQ tài chính bền vững nhất là gì?", "options": [{"key": "A", "text": "Liên tục học, quan sát, ghi chép và thực hành với quyết định nhỏ"}, {"key": "B", "text": "Chờ một khóa học thần kỳ"}, {"key": "C", "text": "Tránh mọi con số"}, {"key": "D", "text": "Chỉ học khi có khủng hoảng"}], "answer": "A"}];
+    const STORAGE_KEY = "dayConLamGiau_quiz_progress_v1";
+    const WRONG_KEY = "dayConLamGiau_wrong_questions_v1";
+
+    const startView = document.getElementById("startView");
+    const quizView = document.getElementById("quizView");
+    const resultView = document.getElementById("resultView");
+    const tapSelect = document.getElementById("tapSelect");
+    const countInput = document.getElementById("countInput");
+    const shuffleCheck = document.getElementById("shuffleCheck");
+    const showAnswerCheck = document.getElementById("showAnswerCheck");
+    const reviewWrongOnlyCheck = document.getElementById("reviewWrongOnlyCheck");
+    const statsBox = document.getElementById("statsBox");
+    const statusText = document.getElementById("statusText");
+
+    const questionMeta = document.getElementById("questionMeta");
+    const questionText = document.getElementById("questionText");
+    const optionsBox = document.getElementById("optionsBox");
+    const feedback = document.getElementById("feedback");
+    const progressBar = document.getElementById("progressBar");
+    const quizMeta = document.getElementById("quizMeta");
+    const scoreMeta = document.getElementById("scoreMeta");
+
+    let state = {
+      pool: [],
+      index: 0,
+      answers: {},
+      revealed: {},
+      score: 0,
+      settings: {}
+    };
+
+    function groupCounts() {
+      const map = {};
+      QUESTION_BANK.forEach(q => map[q.tap] = (map[q.tap] || 0) + 1);
+      return map;
+    }
+
+    function renderStart() {
+      const groups = groupCounts();
+      tapSelect.innerHTML = '<option value="all">Tất cả 13 tập</option>' +
+        Object.keys(groups).map(k => `<option value="${k}">${k} (${groups[k]} câu)</option>`).join("");
+
+      statsBox.innerHTML = `
+        <div class="stat"><span class="muted small">Tổng số câu</span><b>${QUESTION_BANK.length}</b></div>
+        <div class="stat"><span class="muted small">Tổng số tập</span><b>${Object.keys(groups).length}</b></div>
+        <div class="stat"><span class="muted small">Câu sai đã lưu</span><b>${loadWrong().length}</b></div>
+        <div class="stat"><span class="muted small">Tiến độ lưu</span><b>${localStorage.getItem(STORAGE_KEY) ? "Có" : "Chưa"}</b></div>
+      `;
+      statusText.innerHTML = Object.keys(groups).map(k => `• ${k}: ${groups[k]} câu`).join("<br>");
+    }
+
+    function shuffle(arr) {
+      const a = [...arr];
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    function getFilteredPool() {
+      let pool = [...QUESTION_BANK];
+      if (reviewWrongOnlyCheck.checked) {
+        const wrong = loadWrong();
+        pool = QUESTION_BANK.filter(q => wrong.includes(q.question));
+      } else if (tapSelect.value !== "all") {
+        pool = pool.filter(q => q.tap === tapSelect.value);
+      }
+      if (shuffleCheck.checked) pool = shuffle(pool);
+      const n = Math.max(1, Math.min(Number(countInput.value || 20), pool.length));
+      return pool.slice(0, n);
+    }
+
+    function startQuiz(customPool = null) {
+      const pool = customPool || getFilteredPool();
+      if (!pool.length) {
+        alert("Không có câu hỏi phù hợp để học.");
+        return;
+      }
+      state = {
+        pool,
+        index: 0,
+        answers: {},
+        revealed: {},
+        score: 0,
+        settings: {
+          tap: tapSelect.value,
+          count: countInput.value,
+          shuffle: shuffleCheck.checked,
+          showAnswer: showAnswerCheck.checked,
+          reviewWrongOnly: reviewWrongOnlyCheck.checked
+        }
+      };
+      saveProgress();
+      startView.style.display = "none";
+      resultView.style.display = "none";
+      quizView.style.display = "block";
+      renderQuestion();
+    }
+
+    function renderQuestion() {
+      const q = state.pool[state.index];
+      const chosen = state.answers[state.index];
+      const revealed = state.revealed[state.index];
+      quizMeta.textContent = `Bài ${state.index + 1} / ${state.pool.length}`;
+      scoreMeta.textContent = `Đúng: ${currentCorrectCount()} / ${Object.keys(state.answers).length}`;
+      questionMeta.textContent = q.tap;
+      questionText.textContent = q.question;
+      progressBar.style.width = `${((state.index + 1) / state.pool.length) * 100}%`;
+
+      optionsBox.innerHTML = "";
+      q.options.forEach(opt => {
+        const div = document.createElement("div");
+        div.className = "option";
+        if (chosen === opt.key) div.classList.add("selected");
+        if (revealed) {
+          if (opt.key === q.answer) div.classList.add("correct");
+          if (chosen === opt.key && chosen !== q.answer) div.classList.add("wrong");
+        }
+        div.innerHTML = `<b>${opt.key}.</b> ${opt.text}`;
+        div.onclick = () => chooseAnswer(opt.key);
+        optionsBox.appendChild(div);
+      });
+
+      if (revealed) {
+        const isCorrect = chosen === q.answer;
+        feedback.innerHTML = isCorrect
+          ? `✅ Đúng. Đáp án chuẩn là <b>${q.answer}</b>.`
+          : `❌ Sai. Đáp án chuẩn là <b>${q.answer}</b>.`;
+      } else {
+        feedback.textContent = "Chọn một đáp án để tiếp tục.";
+      }
+    }
+
+    function chooseAnswer(key) {
+      state.answers[state.index] = key;
+      if (showAnswerCheck.checked) {
+        state.revealed[state.index] = true;
+      }
+      saveProgress();
+      renderQuestion();
+    }
+
+    function revealAnswer() {
+      if (!(state.index in state.answers)) {
+        feedback.textContent = "Hãy chọn đáp án trước.";
+        return;
+      }
+      state.revealed[state.index] = true;
+      saveProgress();
+      renderQuestion();
+    }
+
+    function nextQuestion() {
+      if (state.index < state.pool.length - 1) {
+        state.index++;
+        saveProgress();
+        renderQuestion();
+      } else {
+        submitQuiz();
+      }
+    }
+
+    function prevQuestion() {
+      if (state.index > 0) {
+        state.index--;
+        saveProgress();
+        renderQuestion();
+      }
+    }
+
+    function currentCorrectCount() {
+      let c = 0;
+      state.pool.forEach((q, idx) => {
+        if (state.answers[idx] === q.answer) c++;
+      });
+      return c;
+    }
+
+    function submitQuiz() {
+      const correct = currentCorrectCount();
+      const total = state.pool.length;
+      const wrong = [];
+      state.pool.forEach((q, idx) => {
+        if (state.answers[idx] !== q.answer) wrong.push(q.question);
+      });
+      saveWrong(wrong);
+      localStorage.removeItem(STORAGE_KEY);
+
+      quizView.style.display = "none";
+      resultView.style.display = "block";
+      startView.style.display = "none";
+
+      document.getElementById("rTotal").textContent = total;
+      document.getElementById("rCorrect").textContent = correct;
+      document.getElementById("rWrong").textContent = total - correct;
+      document.getElementById("rScore").textContent = `${Math.round((correct / total) * 100)}%`;
+
+      const reviewHtml = state.pool.map((q, idx) => {
+        const user = state.answers[idx] || "Chưa chọn";
+        const right = q.answer;
+        const ok = user === right;
+        return `
+          <div class="review-item">
+            <div class="small muted">${q.tap}</div>
+            <div style="font-weight:700; margin:6px 0 10px;">Câu ${idx + 1}. ${q.question}</div>
+            <div class="small">Bạn chọn: <b>${user}</b> ${ok ? "✅" : "❌"}</div>
+            <div class="small">Đáp án đúng: <b>${right}</b></div>
+          </div>
+        `;
+      }).join("");
+      document.getElementById("reviewBox").innerHTML = reviewHtml;
+      renderStart();
+    }
+
+    function saveProgress() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    function loadProgress() {
+      try {
+        return JSON.parse(localStorage.getItem(STORAGE_KEY) || "null");
+      } catch {
+        return null;
+      }
+    }
+
+    function loadWrong() {
+      try {
+        return JSON.parse(localStorage.getItem(WRONG_KEY) || "[]");
+      } catch {
+        return [];
+      }
+    }
+
+    function saveWrong(wrongQuestions) {
+      localStorage.setItem(WRONG_KEY, JSON.stringify(wrongQuestions));
+    }
+
+    function continueQuiz() {
+      const saved = loadProgress();
+      if (!saved || !saved.pool || !saved.pool.length) {
+        alert("Chưa có tiến độ nào để tiếp tục.");
+        return;
+      }
+      state = saved;
+      startView.style.display = "none";
+      resultView.style.display = "none";
+      quizView.style.display = "block";
+      renderQuestion();
+    }
+
+    function resetAll() {
+      if (!confirm("Xóa toàn bộ tiến độ và danh sách câu sai đã lưu?")) return;
+      localStorage.removeItem(STORAGE_KEY);
+      localStorage.removeItem(WRONG_KEY);
+      renderStart();
+      alert("Đã xóa xong.");
+    }
+
+    document.getElementById("startBtn").onclick = () => startQuiz();
+    document.getElementById("continueBtn").onclick = continueQuiz;
+    document.getElementById("resetBtn").onclick = resetAll;
+    document.getElementById("showAnswerBtn").onclick = revealAnswer;
+    document.getElementById("nextBtn").onclick = nextQuestion;
+    document.getElementById("prevBtn").onclick = prevQuestion;
+    document.getElementById("submitBtn").onclick = submitQuiz;
+    document.getElementById("restartBtn").onclick = () => {
+      resultView.style.display = "none";
+      startView.style.display = "block";
+      renderStart();
+    };
+    document.getElementById("reviewWrongBtn").onclick = () => {
+      const wrongList = loadWrong();
+      const pool = QUESTION_BANK.filter(q => wrongList.includes(q.question));
+      if (!pool.length) {
+        alert("Hiện chưa có câu sai nào để ôn lại.");
+        return;
+      }
+      startQuiz(pool);
+    };
+
+    document.addEventListener("keydown", (e) => {
+      if (quizView.style.display !== "block") return;
+      if (["1","2","3","4"].includes(e.key)) {
+        const key = ["A","B","C","D"][Number(e.key)-1];
+        chooseAnswer(key);
+      }
+      if (e.key === "Enter" || e.key.toLowerCase() === "n") nextQuestion();
+      if (e.key.toLowerCase() === "p") prevQuestion();
+      if (e.key.toLowerCase() === "r") revealAnswer();
+    });
+
+    renderStart();
+  </script>
+</body>
+</html>
