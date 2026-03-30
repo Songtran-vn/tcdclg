@@ -29,3 +29,7 @@
 
 
 Phiên bản này đã sửa lỗi màu nền tối ở màn hình kết quả khi deploy lên Vercel.
+
+
+## Bản cập nhật
+- Đã sửa lỗi màu nền và màu chữ ở màn hình **Kết quả ôn tập** để hiển thị sáng, dễ đọc trên Vercel.
