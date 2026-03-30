@@ -26,3 +26,6 @@
 1. Sửa file `index.html`.
 2. Upload lại lên GitHub hoặc commit/push.
 3. Vercel sẽ tự deploy lại.
+
+
+Phiên bản này đã sửa lỗi màu nền tối ở màn hình kết quả khi deploy lên Vercel.
